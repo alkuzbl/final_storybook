@@ -3,17 +3,40 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import { RootStateType } from '../../redux/store';
-import { InitialStateTasksType } from '../../redux/tasksReducer';
+import { TaskType } from '../../redux/tasksReducer';
+import { FilterType } from '../../redux/todolistReducer';
 
 import { Task } from './Task/Task';
 
-export const Tasks = () => {
-  const tasks = useSelector<RootStateType, InitialStateTasksType>(state => state.tasks);
+type TasksPropsType = {
+  todolistID: string;
+  filter: FilterType;
+};
+export const Tasks = React.memo((props: TasksPropsType) => {
+  const { todolistID, filter } = props;
+
+  const tasks = useSelector<RootStateType, TaskType[]>(state => state.tasks[todolistID]);
+
+  let filterTasks = tasks;
+
+  if (filter === 'active') {
+    filterTasks = tasks.filter(t => !t.isDone);
+  }
+  if (filter === 'completed') {
+    filterTasks = tasks.filter(t => t.isDone);
+  }
+
   return (
     <div>
-      {tasks.map(t => (
-        <Task key={t.id} id={t.id} title={t.title} isDone={t.isDone} />
+      {filterTasks.map(t => (
+        <Task
+          key={t.id}
+          id={t.id}
+          title={t.title}
+          isDone={t.isDone}
+          todolistID={todolistID}
+        />
       ))}
     </div>
   );
-};
+});
