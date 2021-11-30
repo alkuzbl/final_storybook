@@ -12,9 +12,10 @@ type EditableSpanPropsType = DefaultPropsType & {
   onBlurCallBack: (value: string) => void;
   onClickCallBack: () => void;
   style?: {};
+  label?: string;
 };
 export const EditableSpan = (props: EditableSpanPropsType) => {
-  const { title, onClickCallBack, onBlurCallBack, style } = props;
+  const { title, onClickCallBack, onBlurCallBack, style, label } = props;
 
   const [editing, setEditing] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
@@ -41,17 +42,13 @@ export const EditableSpan = (props: EditableSpanPropsType) => {
   const styleComponent = {} && style;
 
   return (
-    <>
-      {!editing && (
-        <span onDoubleClick={onDoubleClickEditSpanHandler} style={styleComponent}>
-          {title}
-        </span>
-      )}
+    <div style={styleComponent}>
+      {!editing && <span onDoubleClick={onDoubleClickEditSpanHandler}>{title}</span>}
       {editing && (
         <TextField
           id="outlined-basic"
-          label="Outlined"
-          variant="outlined"
+          label={label || ''}
+          variant="standard"
           value={value}
           onChange={onChange}
           autoFocus
@@ -61,6 +58,6 @@ export const EditableSpan = (props: EditableSpanPropsType) => {
       <IconButton aria-label="delete" onClick={onClick}>
         <DeleteIcon />
       </IconButton>
-    </>
+    </div>
   );
 };

@@ -20,15 +20,7 @@ export type TasksType = {
   [key: string]: TaskType[];
 };
 export type InitialStateTasksType = TasksType;
-const initialStateTasks: InitialStateTasksType = {
-  // [NEW_ID]: [
-  //   { id: v1(), title: 'HTML&CSS', isDone: true },
-  //   { id: v1(), title: 'JS', isDone: true },
-  //   { id: v1(), title: 'ReactJS', isDone: false },
-  //   { id: v1(), title: 'Rest API', isDone: false },
-  //   { id: v1(), title: 'GraphQL', isDone: false },
-  // ],
-};
+const initialStateTasks: InitialStateTasksType = {};
 
 export const tasksReducer = (
   state = initialStateTasks,

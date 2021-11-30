@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Grid, Paper } from '@mui/material';
+
 import { FilterType } from '../redux/todolistReducer';
 
 import { FiltersButtons } from './FiltersButton/FiltersButtons';
@@ -17,11 +19,19 @@ export const TodoList = (props: TodoListPropsType) => {
   const { todolistID, title, filter } = props;
 
   return (
-    <div>
-      <TodolistTitle title={title} todolistID={todolistID} />
-      <NewTask todolistID={todolistID} />
-      <Tasks todolistID={todolistID} filter={filter} />
-      <FiltersButtons filter={filter} todolistID={todolistID} />
-    </div>
+    <Grid item>
+      <Paper
+        sx={{
+          minHeight: 400,
+          width: 300,
+          padding: '5px',
+        }}
+      >
+        <TodolistTitle title={title} todolistID={todolistID} />
+        <FiltersButtons filter={filter} todolistID={todolistID} />
+        <NewTask todolistID={todolistID} />
+        <Tasks todolistID={todolistID} filter={filter} />
+      </Paper>
+    </Grid>
   );
 };

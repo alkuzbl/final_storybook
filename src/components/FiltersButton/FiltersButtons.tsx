@@ -31,8 +31,13 @@ export const FiltersButtons = (props: FiltersButtonsPropsType) => {
     dispatch(changeFilterTodolist(todolistID, filterValue));
   };
 
+  const styleForButtonsFlex = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: '10px',
+  };
   return (
-    <div>
+    <div style={styleForButtonsFlex}>
       {filtersButton.map(f => (
         <Button
           key={f.id}

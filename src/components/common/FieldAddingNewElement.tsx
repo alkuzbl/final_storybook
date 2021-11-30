@@ -7,9 +7,11 @@ import { TextFieldProps } from '@mui/material/TextField/TextField';
 type DefaultProps = TextFieldProps & ButtonProps;
 type FieldAddingNewElementPropsType = DefaultProps & {
   onClickCallBack: (title: string) => void;
+  label?: string;
 };
+
 export const FieldAddingNewElement = (props: FieldAddingNewElementPropsType) => {
-  const { onClickCallBack } = props;
+  const { onClickCallBack, label } = props;
 
   const [value, setValue] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -30,19 +32,28 @@ export const FieldAddingNewElement = (props: FieldAddingNewElementPropsType) => 
     }
   };
 
+  const styleForElementMargin = {
+    marginBottom: '20px',
+  };
+
   return (
-    <>
+    <div style={styleForElementMargin}>
       <TextField
         error={!!error}
         id="outlined-basic"
-        label="Outlined"
+        label={label || ''}
         variant="outlined"
         onChange={onChangeHandler}
         value={value}
       />
-      <Button variant="text" onClick={onClickHandler} disabled={!!error}>
+      <Button
+        variant="outlined"
+        onClick={onClickHandler}
+        disabled={!!error}
+        style={{ padding: '15px' }}
+      >
         +
       </Button>
-    </>
+    </div>
   );
 };

@@ -27,7 +27,7 @@ export const Tasks = React.memo((props: TasksPropsType) => {
   }
 
   return (
-    <div>
+    <>
       {filterTasks.map(t => (
         <Task
           key={t.id}
@@ -37,6 +37,6 @@ export const Tasks = React.memo((props: TasksPropsType) => {
           todolistID={todolistID}
         />
       ))}
-    </div>
+    </>
   );
 });

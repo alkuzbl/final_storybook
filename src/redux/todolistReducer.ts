@@ -9,9 +9,7 @@ type TodolistType = {
   filter: FilterType;
 };
 export type InitialStateTodolistType = TodolistType[];
-const initialStateTodolist: InitialStateTodolistType = [
-  // { id: NEW_ID, title: 'What to buy', filter: 'all' },
-];
+const initialStateTodolist: InitialStateTodolistType = [];
 
 export const todolistReducer = (
   state: InitialStateTodolistType = initialStateTodolist,

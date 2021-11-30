@@ -24,11 +24,14 @@ export const TodolistTitle = (props: TodolistTitlePropsType) => {
     dispatch(updateTitleTodolist(todolistID, value));
   };
 
+  const styleForTitle = { marginBottom: '10px' };
   return (
     <EditableSpan
       onBlurCallBack={updateTitle}
       onClickCallBack={deleteTodolist}
       title={title}
+      style={styleForTitle}
+      label="Update task"
     />
   );
 };

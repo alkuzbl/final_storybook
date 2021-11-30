@@ -30,7 +30,7 @@ export const Task = (props: TaskPropsType) => {
   const onClickRemoveHandler = () => dispatch(removeTask(todolistID, id));
 
   return (
-    <div>
+    <div style={{ display: 'flex' }}>
       <Checkbox checked={isDone} size="small" onChange={changeStatus} />
       <EditableSpan
         title={title}
