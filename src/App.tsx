@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import './App.css';
 
 import { Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { v1 } from 'uuid';
 
 import { FieldAddingNewElement } from './components/common/FieldAddingNewElement';
 import { Header } from './components/Header/Header';
 import { TodoList } from './components/TodoList';
 import { RootStateType } from './redux/store';
-import { addTodolist, InitialStateTodolistType } from './redux/todolistReducer';
+import {
+  createTodolistTC,
+  getTodolistsTC,
+  InitialStateTodolistType,
+} from './redux/todolistReducer';
 
 const App = () => {
   const todolist = useSelector<RootStateType, InitialStateTodolistType>(
@@ -19,9 +22,12 @@ const App = () => {
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(getTodolistsTC());
+  }, []);
+
   const addNewTodolist = (title: string) => {
-    const id = v1();
-    dispatch(addTodolist(id, title));
+    dispatch(createTodolistTC(title));
   };
 
   return (

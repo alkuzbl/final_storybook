@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
-import { todolistAPI, TodolistAPIType } from './api';
+import { todolistAPI, TodolistType } from './api';
 
 export default {
   title: 'API/API for working with todolists',
@@ -8,7 +8,7 @@ export default {
 
 export const GetTodolists = () => {
   const [state, setState] = useState<any>(null);
-  const [todolistId, setTodolistId] = useState<TodolistAPIType[] | null>(null);
+  const [todolistId, setTodolistId] = useState<TodolistType[] | null>(null);
 
   useEffect(() => {
     todolistAPI.getTodolists().then(response => {

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useDispatch } from 'react-redux';
 
-import { addTask } from '../../../redux/tasksReducer';
+import { createTaskTC } from '../../../redux/tasksReducer';
 import { FieldAddingNewElement } from '../../common/FieldAddingNewElement';
 
 type NewTaskPropsType = {
@@ -14,7 +14,7 @@ export const NewTask = (props: NewTaskPropsType) => {
   const dispatch = useDispatch();
 
   const addNewTask = (title: string) => {
-    dispatch(addTask(todolistID, title));
+    dispatch(createTaskTC(todolistID, title));
   };
 
   return (

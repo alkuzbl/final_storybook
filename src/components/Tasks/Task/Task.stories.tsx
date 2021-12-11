@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 
+import { TaskStatuses } from '../../../dal/api';
 import { storiesProviderDecorator } from '../../../redux/StoriesProviderDecorator';
 
 import { Task } from './Task';
@@ -23,7 +24,7 @@ export const EditableTask = Template.bind({});
 
 EditableTask.args = {
   title: 'Editable span , click me twice',
-  isDone: true,
+  status: TaskStatuses.Completed,
   id: '1',
   todolistID: '1',
 };

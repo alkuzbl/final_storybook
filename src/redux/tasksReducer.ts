@@ -1,5 +1,8 @@
-import { v1 } from 'uuid';
+import { Dispatch } from 'redux';
 
+import { tasksAPI, TaskType } from '../dal/api';
+
+import { RootStateType } from './store';
 import {
   ADD_TODOLIST,
   AddTodolistType,
@@ -10,12 +13,8 @@ import {
 const ADD_TASK = 'ADD_TASK';
 const REMOVE_TASK = 'REMOVE_TASK';
 const UPDATE_TASK = 'UPDATE_TASK';
-const CHANGE_STATUS_TASK = 'CHANGE_STATUS_TASK';
-export type TaskType = {
-  id: string;
-  title: string;
-  isDone: boolean;
-};
+const GET_TASKS = 'GET_TASKS';
+
 export type TasksType = {
   [key: string]: TaskType[];
 };
@@ -28,7 +27,10 @@ export const tasksReducer = (
 ): InitialStateTasksType => {
   switch (action.type) {
     case ADD_TASK:
-      return { ...state, [action.tasksID]: [action.payload, ...state[action.tasksID]] };
+      return {
+        ...state,
+        [action.tasksID]: [action.payload, ...state[action.tasksID]],
+      };
     case REMOVE_TASK:
       return {
         ...state,
@@ -38,23 +40,21 @@ export const tasksReducer = (
       return {
         ...state,
         [action.tasksID]: state[action.tasksID].map(s =>
-          s.id === action.id ? { ...s, title: action.title } : s,
-        ),
-      };
-    case CHANGE_STATUS_TASK:
-      return {
-        ...state,
-        [action.tasksID]: state[action.tasksID].map(s =>
-          s.id === action.id ? { ...s, isDone: action.isDone } : s,
+          s.id === action.id ? { ...s, ...action.payload } : s,
         ),
       };
     case ADD_TODOLIST:
-      return { ...state, [action.id]: [] };
+      return { ...state, [action.payload.id]: [] };
     case REMOVE_TODOLIST: {
       const copyState = { ...state };
       delete copyState[action.id];
       return copyState;
     }
+    case GET_TASKS:
+      return {
+        ...state,
+        ...action.payload,
+      };
     default:
       return state;
   }
@@ -63,24 +63,82 @@ export const tasksReducer = (
 type AddTaskType = ReturnType<typeof addTask>;
 type RemoveTaskType = ReturnType<typeof removeTask>;
 type UpdateTaskType = ReturnType<typeof updateTask>;
-type ChangeStatusTaskType = ReturnType<typeof changeStatusTask>;
+type GetTasksType = ReturnType<typeof getTasks>;
 
 type ActionType =
   | AddTaskType
   | RemoveTaskType
   | UpdateTaskType
-  | ChangeStatusTaskType
   | AddTodolistType
-  | RemoveTodolistType;
+  | RemoveTodolistType
+  | GetTasksType;
 
-export const addTask = (tasksID: string, title: string) =>
-  ({ type: ADD_TASK, tasksID, payload: { id: v1(), title, isDone: false } } as const);
+export const addTask = (tasksID: string, payload: TaskType) =>
+  ({
+    type: ADD_TASK,
+    tasksID,
+    payload,
+  } as const);
 
 export const removeTask = (tasksID: string, id: string) =>
   ({ type: REMOVE_TASK, tasksID, id } as const);
 
-export const updateTask = (tasksID: string, id: string, title: string) =>
-  ({ type: UPDATE_TASK, tasksID, id, title } as const);
+export const updateTask = (tasksID: string, id: string, payload: TaskType) =>
+  ({ type: UPDATE_TASK, tasksID, id, payload } as const);
 
-export const changeStatusTask = (tasksID: string, id: string, isDone: boolean) =>
-  ({ type: CHANGE_STATUS_TASK, tasksID, id, isDone } as const);
+export const getTasks = (payload: TasksType) => ({ type: GET_TASKS, payload } as const);
+
+export const getTasksTC = (todolistID: string) => (dispatch: Dispatch) => {
+  tasksAPI.getTasks(todolistID, 10, 1).then(res => {
+    if (res.data.error === null) {
+      const tasks = { [todolistID]: res.data.items };
+      dispatch(getTasks(tasks));
+    }
+  });
+};
+
+export const createTaskTC =
+  (todolistID: string, title: string) => (dispatch: Dispatch) => {
+    tasksAPI.createTask(todolistID, title).then(res => {
+      if (res.data.resultCode === 0) {
+        const task: TaskType = res.data.data.item;
+        dispatch(addTask(todolistID, task));
+      }
+    });
+  };
+
+export const removeTaskTC =
+  (todolistID: string, taskID: string) => (dispatch: Dispatch) => {
+    tasksAPI.removeTask(todolistID, taskID).then(res => {
+      if (res.data.resultCode === 0) {
+        dispatch(removeTask(todolistID, taskID));
+      }
+    });
+  };
+
+export const updateTaskTC =
+  (todolistID: string, taskID: string, updatedData: {}) =>
+  (dispatch: Dispatch, getState: () => RootStateType) => {
+    const state = getState();
+    const task = state.tasks[todolistID].find(t => t.id === taskID);
+    if (task) {
+      const taskModelApi = {
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        priority: task.priority,
+        startDate: task.startDate,
+        deadline: task.deadline,
+      };
+      tasksAPI
+        .updateTask(todolistID, taskID, { ...taskModelApi, ...updatedData })
+        .then(res => {
+          if (res.data.resultCode === 0) {
+            const updatedTask = res.data.data.item;
+            dispatch(updateTask(todolistID, taskID, updatedTask));
+          }
+        });
+    } else {
+      console.log('Error, task not found');
+    }
+  };

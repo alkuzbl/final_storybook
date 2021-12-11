@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useDispatch } from 'react-redux';
 
-import { removeTodolist, updateTitleTodolist } from '../redux/todolistReducer';
+import { removeTodolistTC, updateTitleTodolistTC } from '../redux/todolistReducer';
 
 import { EditableSpan } from './common/EditableSpan';
 
@@ -17,11 +17,11 @@ export const TodolistTitle = (props: TodolistTitlePropsType) => {
   const dispatch = useDispatch();
 
   const deleteTodolist = () => {
-    dispatch(removeTodolist(todolistID));
+    dispatch(removeTodolistTC(todolistID));
   };
 
   const updateTitle = (value: string) => {
-    dispatch(updateTitleTodolist(todolistID, value));
+    dispatch(updateTitleTodolistTC(todolistID, value));
   };
 
   const styleForTitle = { marginBottom: '10px' };

@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
-import { ModelTaskAPIType, TaskAPIType, todolistAPI } from './api';
+import { ModelTaskType, tasksAPI, TaskType, todolistAPI } from './api';
 
 export default {
   title: 'API/API for working with tasks',
@@ -10,12 +10,13 @@ type GetDataPropsType = {
   id: string;
 };
 const GetData = ({ id }: GetDataPropsType) => {
-  const [tasks, setTasks] = useState<TaskAPIType[] | null>(null);
-  const getTasks = () => {
-    todolistAPI.getTasks(id, 10, 1).then(response => {
-      setTasks(response.data.items);
-    });
+  const [tasks, setTasks] = useState<TaskType[] | null>(null);
+
+  const getTasks = async () => {
+    const response = await tasksAPI.getTasks(id, 10, 1);
+    setTasks(response.data.items);
   };
+
   return (
     <div>
       <h3>Title and id tasks</h3>
@@ -36,7 +37,7 @@ const GetData = ({ id }: GetDataPropsType) => {
 };
 
 export const GetTasks = () => {
-  const [state, setState] = useState<TaskAPIType[] | null>(null);
+  const [state, setState] = useState<TaskType[] | null>(null);
   const [todolistId, setTodolistId] = useState<string[] | null>(null);
 
   useEffect(() => {
@@ -45,10 +46,9 @@ export const GetTasks = () => {
     });
   }, []);
 
-  const getTasks = (taskId: string) => {
-    todolistAPI.getTasks(taskId, 10, 1).then(response => {
-      setState(response.data.items);
-    });
+  const getTasks = async (taskId: string) => {
+    const response = await tasksAPI.getTasks(taskId, 10, 1);
+    setState(response.data.items);
   };
 
   return (
@@ -83,10 +83,10 @@ export const CreateTask = () => {
   const [state, setState] = useState<any>(null);
   const [value, setValue] = useState<string>('');
   const [id, setId] = useState<string>('');
-  const createTask = () => {
-    todolistAPI.createTask(id, value).then(response => {
-      setState(response.data.data);
-    });
+
+  const createTask = async () => {
+    const response = await tasksAPI.createTask(id, value);
+    setState(response.data.data);
   };
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) =>
@@ -117,20 +117,17 @@ export const RemoveTask = () => {
   const [id, setId] = useState<string>('');
   const [taskId, setTaskId] = useState<string>('');
 
-  const removeTask = () => {
-    todolistAPI
-      .deleteTask(id, taskId)
-      .then(response => {
-        if (response.data.resultCode === 0) {
-          setState(JSON.stringify(response.data));
-          setTaskId('');
-        }
-      })
-      .catch(error => {
-        setState(JSON.stringify(error));
-      });
+  const removeTask = async () => {
+    try {
+      const response = await tasksAPI.removeTask(id, taskId);
+      if (response.data.resultCode === 0) {
+        setState(JSON.stringify(response.data));
+        setTaskId('');
+      }
+    } catch (error) {
+      setState(JSON.stringify(error));
+    }
   };
-
   const onChangeId = (e: ChangeEvent<HTMLInputElement>) => setId(e.currentTarget.value);
 
   const onChangeTaskId = (e: ChangeEvent<HTMLInputElement>) =>
@@ -158,18 +155,18 @@ export const UpdateTask = () => {
   const [id, setId] = useState<string>('');
   const [taskId, setTaskId] = useState<string>('');
 
-  const date = new Date();
-  const modelTask: ModelTaskAPIType = {
+  //  const date = new Date();
+  const modelTask: ModelTaskType = {
     title: 'jjj',
     description: 'lkhikhkl',
-    completed: false,
     status: 0,
     priority: 0,
-    startDate: date,
-    deadline: date,
+    startDate: '',
+    deadline: '',
   };
+
   const updateTask = () => {
-    todolistAPI
+    tasksAPI
       .updateTask(id, taskId, modelTask)
       .then(response => {
         if (response.data.resultCode === 0) {
