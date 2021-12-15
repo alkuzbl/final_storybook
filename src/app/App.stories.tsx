@@ -2,8 +2,9 @@ import React from 'react';
 
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
+import { storiesProviderDecorator } from '../redux/StoriesProviderDecorator';
+
 import App from './App';
-import { storiesProviderDecorator } from './redux/StoriesProviderDecorator';
 
 export default {
   title: 'TODOLISTS/AppTodolists',

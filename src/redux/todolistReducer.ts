@@ -7,14 +7,8 @@ export const REMOVE_TODOLIST = 'REMOVE_TODOLIST';
 const UPDATE_TITLE_TODOLIST = 'UPDATE_TITLE_TODOLIST';
 const CHANGE_FILTER_TODOLIST = 'CHANGE_FILTER_TODOLIST';
 
-export type FilterType = 'all' | 'active' | 'completed';
-
-export type InitialStateTodolistType = (TodolistType & { filter: FilterType })[];
-
-const initialStateTodolist: InitialStateTodolistType = [];
-
 export const todolistReducer = (
-  state: InitialStateTodolistType = initialStateTodolist,
+  state: InitialStateTodolistType = [],
   action: ActionType,
 ): InitialStateTodolistType => {
   switch (action.type) {
@@ -30,28 +24,17 @@ export const todolistReducer = (
       return state;
   }
 };
-export type AddTodolistType = ReturnType<typeof addTodolist>;
-export type RemoveTodolistType = ReturnType<typeof removeTodolist>;
-type UpdateTitleTodolistType = ReturnType<typeof updateTitleTodolist>;
-type ChangeFilterTodolistType = ReturnType<typeof changeFilterTodolist>;
 
-type ActionType =
-  | AddTodolistType
-  | RemoveTodolistType
-  | UpdateTitleTodolistType
-  | ChangeFilterTodolistType;
-
+// actions
 export const addTodolist = (payload: TodolistType & { filter: FilterType }) =>
   ({ type: ADD_TODOLIST, payload } as const);
-
 export const removeTodolist = (id: string) => ({ type: REMOVE_TODOLIST, id } as const);
-
 export const updateTitleTodolist = (id: string, title: string) =>
   ({ type: UPDATE_TITLE_TODOLIST, id, title } as const);
-
 export const changeFilterTodolist = (id: string, filter: FilterType) =>
   ({ type: CHANGE_FILTER_TODOLIST, id, filter } as const);
 
+// thanks
 export const getTodolistsTC = () => (dispatch: Dispatch) => {
   todolistAPI.getTodolists().then(res => {
     res.data.forEach(todolist => dispatch(addTodolist({ ...todolist, filter: 'all' })));
@@ -81,3 +64,14 @@ export const updateTitleTodolistTC =
       }
     });
   };
+
+// types
+export type AddTodolistType = ReturnType<typeof addTodolist>;
+export type RemoveTodolistType = ReturnType<typeof removeTodolist>;
+type ActionType =
+  | AddTodolistType
+  | RemoveTodolistType
+  | ReturnType<typeof updateTitleTodolist>
+  | ReturnType<typeof changeFilterTodolist>;
+export type FilterType = 'all' | 'active' | 'completed';
+export type InitialStateTodolistType = (TodolistType & { filter: FilterType })[];

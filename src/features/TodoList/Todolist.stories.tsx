@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { storiesProviderDecorator } from '../redux/StoriesProviderDecorator';
+import { storiesProviderDecorator } from '../../redux/StoriesProviderDecorator';
 
 import { TodoList } from './TodoList';
 

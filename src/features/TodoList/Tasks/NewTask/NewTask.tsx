@@ -2,8 +2,8 @@ import React from 'react';
 
 import { useDispatch } from 'react-redux';
 
-import { createTaskTC } from '../../../redux/tasksReducer';
-import { FieldAddingNewElement } from '../../common/FieldAddingNewElement';
+import { FieldAddingNewElement } from '../../../../components/common/FieldAddingNewElement';
+import { createTaskTC } from '../../../../redux/tasksReducer';
 
 type NewTaskPropsType = {
   todolistID: string;

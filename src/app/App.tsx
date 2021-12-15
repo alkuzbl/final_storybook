@@ -5,15 +5,15 @@ import './App.css';
 import { Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { FieldAddingNewElement } from './components/common/FieldAddingNewElement';
-import { Header } from './components/Header/Header';
-import { TodoList } from './components/TodoList';
-import { RootStateType } from './redux/store';
+import { FieldAddingNewElement } from '../components/common/FieldAddingNewElement';
+import { Header } from '../features/Header/Header';
+import { TodoList } from '../features/TodoList/TodoList';
+import { RootStateType } from '../redux/store';
 import {
   createTodolistTC,
   getTodolistsTC,
   InitialStateTodolistType,
-} from './redux/todolistReducer';
+} from '../redux/todolistReducer';
 
 const App = () => {
   const todolist = useSelector<RootStateType, InitialStateTodolistType>(

@@ -3,9 +3,9 @@ import React, { ChangeEvent } from 'react';
 import { Checkbox } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
-import { TaskStatuses } from '../../../dal/api';
-import { removeTaskTC, updateTaskTC } from '../../../redux/tasksReducer';
-import { EditableSpan } from '../../common/EditableSpan';
+import { EditableSpan } from '../../../../components/common/EditableSpan';
+import { TaskStatuses } from '../../../../dal/api';
+import { removeTaskTC, updateTaskTC } from '../../../../redux/tasksReducer';
 
 type TaskPropsType = {
   todolistID: string;

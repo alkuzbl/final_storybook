@@ -1,10 +1,8 @@
-import React from 'react';
-
 import { Grid, Paper } from '@mui/material';
 
-import { FilterType } from '../redux/todolistReducer';
+import { FilterType } from '../../redux/todolistReducer';
+import { FiltersButtons } from '../FiltersButton/FiltersButtons';
 
-import { FiltersButtons } from './FiltersButton/FiltersButtons';
 import { NewTask } from './Tasks/NewTask/NewTask';
 import { Tasks } from './Tasks/Tasks';
 import { TodolistTitle } from './TodolistTitle';

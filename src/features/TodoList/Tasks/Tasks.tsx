@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { TaskStatuses, TaskType } from '../../dal/api';
-import { RootStateType } from '../../redux/store';
-import { getTasksTC } from '../../redux/tasksReducer';
-import { FilterType } from '../../redux/todolistReducer';
+import { TaskStatuses, TaskType } from '../../../dal/api';
+import { RootStateType } from '../../../redux/store';
+import { getTasksTC } from '../../../redux/tasksReducer';
+import { FilterType } from '../../../redux/todolistReducer';
 
 import { Task } from './Task/Task';
 

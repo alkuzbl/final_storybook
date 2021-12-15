@@ -15,9 +15,6 @@ const REMOVE_TASK = 'REMOVE_TASK';
 const UPDATE_TASK = 'UPDATE_TASK';
 const GET_TASKS = 'GET_TASKS';
 
-export type TasksType = {
-  [key: string]: TaskType[];
-};
 export type InitialStateTasksType = TasksType;
 const initialStateTasks: InitialStateTasksType = {};
 
@@ -60,39 +57,24 @@ export const tasksReducer = (
   }
 };
 
-type AddTaskType = ReturnType<typeof addTask>;
-type RemoveTaskType = ReturnType<typeof removeTask>;
-type UpdateTaskType = ReturnType<typeof updateTask>;
-type GetTasksType = ReturnType<typeof getTasks>;
-
-type ActionType =
-  | AddTaskType
-  | RemoveTaskType
-  | UpdateTaskType
-  | AddTodolistType
-  | RemoveTodolistType
-  | GetTasksType;
-
+// actions
 export const addTask = (tasksID: string, payload: TaskType) =>
   ({
     type: ADD_TASK,
     tasksID,
     payload,
   } as const);
-
 export const removeTask = (tasksID: string, id: string) =>
   ({ type: REMOVE_TASK, tasksID, id } as const);
-
 export const updateTask = (tasksID: string, id: string, payload: TaskType) =>
   ({ type: UPDATE_TASK, tasksID, id, payload } as const);
-
 export const getTasks = (payload: TasksType) => ({ type: GET_TASKS, payload } as const);
 
+// thanks
 export const getTasksTC = (todolistID: string) => (dispatch: Dispatch) => {
   tasksAPI.getTasks(todolistID, 10, 1).then(res => {
     if (res.data.error === null) {
-      const tasks = { [todolistID]: res.data.items };
-      dispatch(getTasks(tasks));
+      dispatch(getTasks({ [todolistID]: res.data.items }));
     }
   });
 };
@@ -139,6 +121,19 @@ export const updateTaskTC =
           }
         });
     } else {
-      console.log('Error, task not found');
+      // console.log('Error, task not found');
     }
   };
+
+// types
+export type TasksType = {
+  [key: string]: TaskType[];
+};
+
+type ActionType =
+  | ReturnType<typeof addTask>
+  | ReturnType<typeof removeTask>
+  | ReturnType<typeof updateTask>
+  | AddTodolistType
+  | RemoveTodolistType
+  | ReturnType<typeof getTasks>;

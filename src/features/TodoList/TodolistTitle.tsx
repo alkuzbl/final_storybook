@@ -2,9 +2,8 @@ import React from 'react';
 
 import { useDispatch } from 'react-redux';
 
-import { removeTodolistTC, updateTitleTodolistTC } from '../redux/todolistReducer';
-
-import { EditableSpan } from './common/EditableSpan';
+import { EditableSpan } from '../../components/common/EditableSpan';
+import { removeTodolistTC, updateTitleTodolistTC } from '../../redux/todolistReducer';
 
 type TodolistTitlePropsType = {
   title: string;

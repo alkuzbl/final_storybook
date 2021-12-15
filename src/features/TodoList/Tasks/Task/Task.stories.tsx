@@ -2,8 +2,8 @@ import React from 'react';
 
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
-import { TaskStatuses } from '../../../dal/api';
-import { storiesProviderDecorator } from '../../../redux/StoriesProviderDecorator';
+import { TaskStatuses } from '../../../../dal/api';
+import { storiesProviderDecorator } from '../../../../redux/StoriesProviderDecorator';
 
 import { Task } from './Task';
 
