@@ -1,4 +1,5 @@
 import {
+  addTodolist,
   changeFilterTodolist,
   InitialStateTodolistType,
   removeTodolist,
@@ -6,7 +7,7 @@ import {
   updateTitleTodolist,
 } from './todolistReducer';
 
-let state: InitialStateTodolistType = [];
+let state: InitialStateTodolistType;
 
 beforeEach(() => {
   state = [
@@ -15,16 +16,22 @@ beforeEach(() => {
   ];
 });
 
-// test('A new todolist should be added', () => {
-//   const testTasksState = todolistReducer(
-//     state,
-//     addTodolist('3', 'Test title for todolist'),
-//   );
-//
-//   expect(testTasksState.length).toBe(3);
-//   expect(testTasksState[2].title).toBe('Test title for todolist');
-//   expect(testTasksState[2].filter).toBe('all');
-// });
+test('A new todolist should be added', () => {
+  const testTasksState = todolistReducer(
+    state,
+    addTodolist({
+      id: '3',
+      title: 'Test title for todolist',
+      order: 0,
+      addedDate: '',
+      filter: 'all',
+    }),
+  );
+
+  expect(testTasksState.length).toBe(3);
+  expect(testTasksState[2].title).toBe('Test title for todolist');
+  expect(testTasksState[2].filter).toBe('all');
+});
 
 test('There should be a todolist with id 1', () => {
   const testTasksState = todolistReducer(state, removeTodolist('1'));

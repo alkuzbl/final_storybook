@@ -1,65 +1,127 @@
-import { TaskStatuses } from '../dal/api';
+import { TaskStatuses, TodolistType } from '../dal/api';
 
-import { removeTask, tasksReducer } from './tasksReducer';
-import { removeTodolist } from './todolistReducer';
+import { addTask, removeTask, tasksReducer, TasksType, updateTask } from './tasksReducer';
+import { addTodolist, FilterType, removeTodolist } from './todolistReducer';
 
-let state = {};
+let state: TasksType;
 
 beforeEach(() => {
   state = {
-    // todolist: [{ id: '1', title: 'What to buy', filter: 'all' }],
-
     '1': [
-      { id: '1', title: 'HTML&CSS', status: TaskStatuses.Completed },
-      { id: '2', title: 'JS', status: TaskStatuses.Completed },
-      { id: '3', title: 'ReactJS', status: TaskStatuses.New },
-      { id: '4', title: 'Rest API', status: TaskStatuses.New },
-      { id: '5', title: 'GraphQL', status: TaskStatuses.New },
+      {
+        id: '1',
+        title: 'HTML&CSS',
+        status: TaskStatuses.Completed,
+        priority: 0,
+        startDate: '',
+        deadline: '',
+        todoListId: '1',
+        order: 0,
+        addedDate: '',
+        description: '',
+      },
+      {
+        id: '2',
+        title: 'Test HTML title',
+        status: TaskStatuses.Completed,
+        priority: 0,
+        startDate: '',
+        deadline: '',
+        todoListId: '1',
+        order: 0,
+        addedDate: '',
+        description: '',
+      },
     ],
   };
 });
 
-// test('A new task should be added', () => {
-//   const testTasksState = tasksReducer(state, addTask('1', 'Test title'));
-//
-//   expect(testTasksState['1'].length).toBe(6);
-//   expect(testTasksState['1'][0].title).toBe('Test title');
-// });
+test('A new task should be added', () => {
+  const newTask = {
+    id: '1',
+    title: 'Test title',
+    status: TaskStatuses.Completed,
+    priority: 0,
+    startDate: '',
+    deadline: '',
+    todoListId: '1',
+    order: 0,
+    addedDate: '',
+    description: '',
+  };
+  const testTasksState = tasksReducer(state, addTask('1', newTask));
 
-test('The task with id 3 must be deleted', () => {
-  const testTasksState = tasksReducer(state, removeTask('1', '3'));
-
-  expect(testTasksState['1'].length).toBe(4);
-  expect(testTasksState['1'].map(s => s.title)).not.toContain('ReactJS');
+  expect(testTasksState['1'].length).toBe(3);
+  expect(testTasksState['1'][0].title).toBe('Test title');
 });
 
-// test('In a task with id 3, the name should be "Test title"', () => {
-//   const testTasksState = tasksReducer(state, updateTask('1', '3', 'Test title'));
-//
-//   expect(testTasksState['1'].length).toBe(5);
-//   expect(testTasksState['1'].map(s => s.title)).not.toContain('ReactJS');
-//   expect(testTasksState['1'][2].title).toBe('Test title');
-// });
+test('The task with id 2 must be deleted', () => {
+  const testTasksState = tasksReducer(state, removeTask('1', '2'));
 
-// test('In a task with id 3, the isDone should be "true"', () => {
-//   const testTasksState = tasksReducer(state, changeStatusTask('1', '3', true));
-//
-//   expect(testTasksState['1'].length).toBe(5);
-//   expect(testTasksState['1'][2].title).toBe('ReactJS');
-//   expect(testTasksState['1'][2].isDone).toBe(true);
-// });
+  expect(testTasksState['1'].length).toBe(1);
+  expect(testTasksState['1'].map(s => s.title)).not.toContain('Test HTML title');
+});
 
-// test('A second task list with id 2 should be added', () => {
-//   const testTasksState = tasksReducer(state, addTodolist('2', ''));
-//
-//   expect(Object.keys(testTasksState).length).toBe(2);
-//   expect(Object.keys(testTasksState)[0]).toBe('1');
-//   expect(Object.keys(testTasksState)[1]).toBe('2');
-//   expect(testTasksState['1'].length).toBe(5);
-//   expect(testTasksState['2'].length).toBe(0);
-// });
+test('In a task with id 2, the name should be "Test title"', () => {
+  const newTitleTask = {
+    id: '2',
+    title: 'Test title',
+    status: TaskStatuses.Completed,
+    priority: 0,
+    startDate: '',
+    deadline: '',
+    todoListId: '1',
+    order: 0,
+    addedDate: '',
+    description: '',
+  };
+  const testTasksState = tasksReducer(state, updateTask('1', '2', newTitleTask));
+
+  expect(testTasksState['1'].length).toBe(2);
+  expect(testTasksState['1'].map(s => s.title)).not.toContain('Test HTML title');
+  expect(testTasksState['1'][1].title).toBe('Test title');
+});
+
+test('In a task with id 2, the status should be "TaskStatuses.New"', () => {
+  const newStatusTask = {
+    id: '2',
+    title: 'Test HTML title',
+    status: TaskStatuses.New,
+    priority: 0,
+    startDate: '',
+    deadline: '',
+    todoListId: '1',
+    order: 0,
+    addedDate: '',
+    description: '',
+  };
+
+  const testTasksState = tasksReducer(state, updateTask('1', '2', newStatusTask));
+
+  expect(testTasksState['1'].length).toBe(2);
+  expect(testTasksState['1'][1].title).toBe('Test HTML title');
+  expect(testTasksState['1'][1].status).toBe(TaskStatuses.New);
+});
 
 test('A second task list with id 2 should be added', () => {
+  const newTodolist: TodolistType & { filter: FilterType } = {
+    id: '2',
+    title: 'Test todolist title',
+    filter: 'all',
+    order: 0,
+    addedDate: '',
+  };
+
+  const testTasksState = tasksReducer(state, addTodolist(newTodolist));
+
+  expect(Object.keys(testTasksState).length).toBe(2);
+  expect(Object.keys(testTasksState)[0]).toBe('1');
+  expect(Object.keys(testTasksState)[1]).toBe('2');
+  expect(testTasksState['1'].length).toBe(2);
+  expect(testTasksState['2'].length).toBe(0);
+});
+
+test('A second task list with id 1 should be deleted', () => {
   const testTasksState = tasksReducer(state, removeTodolist('1'));
 
   expect(Object.keys(testTasksState)).toHaveLength(0);
