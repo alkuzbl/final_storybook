@@ -3,7 +3,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 
 import { FieldAddingNewElement } from '../../../../components/common/FieldAddingNewElement';
-import { createTaskTC } from '../../../../redux/tasksReducer';
+import { createTaskTC } from '../../../../redux/tasks-reducer';
 
 type NewTaskPropsType = {
   todolistID: string;

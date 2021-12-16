@@ -1,7 +1,13 @@
 import { TaskStatuses, TodolistType } from '../dal/api';
 
-import { addTask, removeTask, tasksReducer, TasksType, updateTask } from './tasksReducer';
-import { addTodolist, FilterType, removeTodolist } from './todolistReducer';
+import {
+  addTask,
+  removeTask,
+  tasksReducer,
+  TasksType,
+  updateTask,
+} from './tasks-reducer';
+import { addTodolist, FilterType, removeTodolist } from './todolist-reducer';
 
 let state: TasksType;
 

@@ -6,10 +6,14 @@ import { combineReducers, createStore } from 'redux';
 import { TaskPriorities, TaskStatuses } from '../dal/api';
 
 import { RootStateType } from './store';
-import { tasksReducer } from './tasksReducer';
-import { todolistReducer } from './todolistReducer';
+import { tasksReducer } from './tasks-reducer';
+import { todolistReducer } from './todolist-reducer';
 
 const initialState: RootStateType = {
+  app: {
+    error: null,
+    status: 'idle',
+  },
   todolist: [
     { id: '1', title: 'What to bu', addedDate: '', order: 0, filter: 'all' },
     { id: '2', title: 'What to buy', addedDate: '', order: 0, filter: 'all' },

@@ -5,7 +5,7 @@ import {
   removeTodolist,
   todolistReducer,
   updateTitleTodolist,
-} from './todolistReducer';
+} from './todolist-reducer';
 
 let state: InitialStateTodolistType;
 

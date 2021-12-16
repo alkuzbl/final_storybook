@@ -11,9 +11,9 @@ import { TodoList } from '../features/TodoList/TodoList';
 import { RootStateType } from '../redux/store';
 import {
   createTodolistTC,
-  getTodolistsTC,
+  setTodolistsTC,
   InitialStateTodolistType,
-} from '../redux/todolistReducer';
+} from '../redux/todolist-reducer';
 
 const App = () => {
   const todolist = useSelector<RootStateType, InitialStateTodolistType>(
@@ -23,7 +23,7 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getTodolistsTC());
+    dispatch(setTodolistsTC());
   }, []);
 
   const addNewTodolist = (title: string) => {

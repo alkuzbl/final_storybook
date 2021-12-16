@@ -2,6 +2,8 @@ import { Dispatch } from 'redux';
 
 import { todolistAPI, TodolistType } from '../dal/api';
 
+import { setStatusApp } from './app-reducer';
+
 export const ADD_TODOLIST = 'ADD_TODOLIST';
 export const REMOVE_TODOLIST = 'REMOVE_TODOLIST';
 const UPDATE_TITLE_TODOLIST = 'UPDATE_TITLE_TODOLIST';
@@ -35,32 +37,40 @@ export const changeFilterTodolist = (id: string, filter: FilterType) =>
   ({ type: CHANGE_FILTER_TODOLIST, id, filter } as const);
 
 // thanks
-export const getTodolistsTC = () => (dispatch: Dispatch) => {
+export const setTodolistsTC = () => (dispatch: Dispatch) => {
+  dispatch(setStatusApp('loading'));
   todolistAPI.getTodolists().then(res => {
     res.data.forEach(todolist => dispatch(addTodolist({ ...todolist, filter: 'all' })));
+    dispatch(setStatusApp('idle'));
   });
 };
 
 export const createTodolistTC = (title: string) => (dispatch: Dispatch) => {
+  dispatch(setStatusApp('loading'));
   todolistAPI.createTodolist(title).then(res => {
     const todolist = res.data.data.item;
     dispatch(addTodolist({ ...todolist, filter: 'all' }));
+    dispatch(setStatusApp('idle'));
   });
 };
 
 export const removeTodolistTC = (todolistID: string) => (dispatch: Dispatch) => {
+  dispatch(setStatusApp('loading'));
   todolistAPI.deleteTodolist(todolistID).then(res => {
     if (res.data.resultCode === 0) {
       dispatch(removeTodolist(todolistID));
+      dispatch(setStatusApp('idle'));
     }
   });
 };
 
 export const updateTitleTodolistTC =
   (todolistID: string, title: string) => (dispatch: Dispatch) => {
+    dispatch(setStatusApp('loading'));
     todolistAPI.updateTodolist(todolistID, title).then(res => {
       if (res.data.resultCode === 0) {
         dispatch(updateTitleTodolist(todolistID, title));
+        dispatch(setStatusApp('idle'));
       }
     });
   };

@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 
 import { EditableSpan } from '../../../../components/common/EditableSpan';
 import { TaskStatuses } from '../../../../dal/api';
-import { removeTaskTC, updateTaskTC } from '../../../../redux/tasksReducer';
+import { removeTaskTC, updateTaskTC } from '../../../../redux/tasks-reducer';
 
 type TaskPropsType = {
   todolistID: string;

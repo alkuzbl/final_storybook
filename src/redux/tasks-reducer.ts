@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 
-import { tasksAPI, TaskType } from '../dal/api';
+import { ModelTaskType, tasksAPI, TaskStatuses, TaskType } from '../dal/api';
 
 import { RootStateType } from './store';
 import {
@@ -8,7 +8,7 @@ import {
   AddTodolistType,
   REMOVE_TODOLIST,
   RemoveTodolistType,
-} from './todolistReducer';
+} from './todolist-reducer';
 
 const ADD_TASK = 'ADD_TASK';
 const REMOVE_TASK = 'REMOVE_TASK';
@@ -99,12 +99,12 @@ export const removeTaskTC =
   };
 
 export const updateTaskTC =
-  (todolistID: string, taskID: string, updatedData: {}) =>
+  (todolistID: string, taskID: string, updatedModel: UpdatedModelType) =>
   (dispatch: Dispatch, getState: () => RootStateType) => {
     const state = getState();
     const task = state.tasks[todolistID].find(t => t.id === taskID);
     if (task) {
-      const taskModelApi = {
+      const taskModelApi: ModelTaskType = {
         title: task.title,
         description: task.description,
         status: task.status,
@@ -113,7 +113,7 @@ export const updateTaskTC =
         deadline: task.deadline,
       };
       tasksAPI
-        .updateTask(todolistID, taskID, { ...taskModelApi, ...updatedData })
+        .updateTask(todolistID, taskID, { ...taskModelApi, ...updatedModel })
         .then(res => {
           if (res.data.resultCode === 0) {
             const updatedTask = res.data.data.item;
@@ -137,3 +137,5 @@ type ActionType =
   | AddTodolistType
   | RemoveTodolistType
   | ReturnType<typeof getTasks>;
+
+type UpdatedModelType = { title: string } | { status: TaskStatuses };

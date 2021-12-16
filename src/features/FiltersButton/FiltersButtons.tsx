@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { v1 } from 'uuid';
 
-import { changeFilterTodolist, FilterType } from '../../redux/todolistReducer';
+import { changeFilterTodolist, FilterType } from '../../redux/todolist-reducer';
 
 const filtersButton: FiltersButtonType = [
   { id: v1(), label: 'All', filter: 'all' },
