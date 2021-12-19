@@ -3,7 +3,7 @@ import React, { ChangeEvent } from 'react';
 import { Checkbox } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
-import { EditableSpan } from '../../../../components/common/EditableSpan';
+import { EditableSpan } from '../../../../components/EditableSpan/EditableSpan';
 import { TaskStatuses } from '../../../../dal/api';
 import { removeTaskTC, updateTaskTC } from '../../../../redux/tasks-reducer';
 

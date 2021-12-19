@@ -1,7 +1,10 @@
 import { Dispatch } from 'redux';
 
 import { ModelTaskType, tasksAPI, TaskStatuses, TaskType } from '../dal/api';
+import { errorsAppHandler, errorsTodolistHandler } from '../utils/errorApp-helper';
+import { setWithTheStatus } from '../utils/statusTodolist-helper';
 
+import { setError, setStatusApp } from './app-reducer';
 import { RootStateType } from './store';
 import {
   ADD_TODOLIST,
@@ -72,30 +75,51 @@ export const getTasks = (payload: TasksType) => ({ type: GET_TASKS, payload } as
 
 // thanks
 export const getTasksTC = (todolistID: string) => (dispatch: Dispatch) => {
-  tasksAPI.getTasks(todolistID, 10, 1).then(res => {
-    if (res.data.error === null) {
-      dispatch(getTasks({ [todolistID]: res.data.items }));
-    }
-  });
+  dispatch(setStatusApp('loading'));
+  tasksAPI
+    .getTasks(todolistID, 10, 1)
+    .then(res => {
+      if (res.data.error === null) {
+        dispatch(getTasks({ [todolistID]: res.data.items }));
+      } else {
+        dispatch(setError(res.data.error));
+      }
+      dispatch(setStatusApp('idle'));
+    })
+    .catch(err => errorsAppHandler(err, dispatch, 'idle'));
 };
 
 export const createTaskTC =
   (todolistID: string, title: string) => (dispatch: Dispatch) => {
-    tasksAPI.createTask(todolistID, title).then(res => {
-      if (res.data.resultCode === 0) {
-        const task: TaskType = res.data.data.item;
-        dispatch(addTask(todolistID, task));
-      }
-    });
+    setWithTheStatus(todolistID, 'loading', dispatch);
+    tasksAPI
+      .createTask(todolistID, title)
+      .then(res => {
+        if (res.data.resultCode === 0) {
+          const task: TaskType = res.data.data.item;
+          dispatch(addTask(todolistID, task));
+        } else {
+          dispatch(setError(res.data.messages[0]));
+        }
+        setWithTheStatus(todolistID, 'idle', dispatch);
+      })
+      .catch(err => errorsTodolistHandler(err, dispatch, todolistID, 'idle'));
   };
 
 export const removeTaskTC =
   (todolistID: string, taskID: string) => (dispatch: Dispatch) => {
-    tasksAPI.removeTask(todolistID, taskID).then(res => {
-      if (res.data.resultCode === 0) {
-        dispatch(removeTask(todolistID, taskID));
-      }
-    });
+    setWithTheStatus(todolistID, 'loading', dispatch);
+    tasksAPI
+      .removeTask(todolistID, taskID)
+      .then(res => {
+        if (res.data.resultCode === 0) {
+          dispatch(removeTask(todolistID, taskID));
+        } else {
+          dispatch(setError(res.data.messages[0]));
+        }
+        setWithTheStatus(todolistID, 'idle', dispatch);
+      })
+      .catch(err => errorsTodolistHandler(err, dispatch, todolistID, 'idle'));
   };
 
 export const updateTaskTC =
@@ -104,6 +128,7 @@ export const updateTaskTC =
     const state = getState();
     const task = state.tasks[todolistID].find(t => t.id === taskID);
     if (task) {
+      setWithTheStatus(todolistID, 'loading', dispatch);
       const taskModelApi: ModelTaskType = {
         title: task.title,
         description: task.description,
@@ -118,10 +143,12 @@ export const updateTaskTC =
           if (res.data.resultCode === 0) {
             const updatedTask = res.data.data.item;
             dispatch(updateTask(todolistID, taskID, updatedTask));
+          } else {
+            dispatch(setError(res.data.messages[0]));
           }
-        });
-    } else {
-      // console.log('Error, task not found');
+          setWithTheStatus(todolistID, 'idle', dispatch);
+        })
+        .catch(err => errorsTodolistHandler(err, dispatch, todolistID, 'idle'));
     }
   };
 

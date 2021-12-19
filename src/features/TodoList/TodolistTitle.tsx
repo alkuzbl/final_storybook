@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useDispatch } from 'react-redux';
 
-import { EditableSpan } from '../../components/common/EditableSpan';
+import { EditableSpan } from '../../components/EditableSpan/EditableSpan';
 import { removeTodolistTC, updateTitleTodolistTC } from '../../redux/todolist-reducer';
 
 type TodolistTitlePropsType = {
@@ -12,7 +12,6 @@ type TodolistTitlePropsType = {
 
 export const TodolistTitle = (props: TodolistTitlePropsType) => {
   const { title, todolistID } = props;
-
   const dispatch = useDispatch();
 
   const deleteTodolist = () => {

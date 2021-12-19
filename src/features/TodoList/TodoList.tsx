@@ -1,5 +1,6 @@
 import { Grid, Paper } from '@mui/material';
 
+import { AppStatusType } from '../../redux/app-reducer';
 import { FilterType } from '../../redux/todolist-reducer';
 import { FiltersButtons } from '../FiltersButton/FiltersButtons';
 
@@ -11,13 +12,17 @@ type TodoListPropsType = {
   todolistID: string;
   title: string;
   filter: FilterType;
+  disabled?: AppStatusType;
 };
 
 export const TodoList = (props: TodoListPropsType) => {
-  const { todolistID, title, filter } = props;
+  const { todolistID, title, filter, disabled } = props;
+
+  const disabledTodolistWithTheStatus: {} =
+    disabled === 'loading' ? { pointerEvents: 'none' } : {};
 
   return (
-    <Grid item>
+    <Grid item style={disabledTodolistWithTheStatus}>
       <Paper
         sx={{
           minHeight: 400,

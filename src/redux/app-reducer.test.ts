@@ -1,4 +1,10 @@
-import { appReducer, InitStateAppType, setError, setStatusApp } from './app-reducer';
+import {
+  appReducer,
+  initializeTheApp,
+  InitStateAppType,
+  setError,
+  setStatusApp,
+} from './app-reducer';
 
 let state: InitStateAppType;
 
@@ -6,6 +12,7 @@ beforeEach(() => {
   state = {
     status: 'idle',
     error: null,
+    isInitialized: false,
   };
 });
 
@@ -21,6 +28,14 @@ test('The status "loading" should be added', () => {
   const testTasksState = appReducer(state, setStatusApp('loading'));
 
   expect(testTasksState.status).toBe('loading');
+  expect(testTasksState.error).toBe(null);
+  expect(state.status).toBe('idle');
+});
+
+test('The isInitialized "false" should be "true"', () => {
+  const testTasksState = appReducer(state, initializeTheApp(true));
+
+  expect(testTasksState.isInitialized).toBe(true);
   expect(testTasksState.error).toBe(null);
   expect(state.status).toBe('idle');
 });

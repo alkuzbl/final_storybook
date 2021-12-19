@@ -1,51 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
-import { Grid } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { FieldAddingNewElement } from '../components/common/FieldAddingNewElement';
+import { ErrorBar } from '../components/ErrorBar/ErrorBar';
 import { Header } from '../features/Header/Header';
-import { TodoList } from '../features/TodoList/TodoList';
-import { RootStateType } from '../redux/store';
-import {
-  createTodolistTC,
-  setTodolistsTC,
-  InitialStateTodolistType,
-} from '../redux/todolist-reducer';
+import { Login } from '../features/Login/Login';
+import { Todolists } from '../features/Todolists/Todolists';
 
-const App = () => {
-  const todolist = useSelector<RootStateType, InitialStateTodolistType>(
-    state => state.todolist,
-  );
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(setTodolistsTC());
-  }, []);
-
-  const addNewTodolist = (title: string) => {
-    dispatch(createTodolistTC(title));
-  };
-
-  return (
-    <div className="App">
-      <Header />
-      <div className="App-container">
-        <FieldAddingNewElement
-          onClickCallBack={addNewTodolist}
-          label="Title for to-do list"
-        />
-        <Grid justifyContent="center" container spacing={1}>
-          {todolist.map(t => (
-            <TodoList key={t.id} title={t.title} todolistID={t.id} filter={t.filter} />
-          ))}
-        </Grid>
-      </div>
-    </div>
-  );
-};
+const App = () => (
+  <div className="App">
+    <Header />
+    <div className="App-container" />
+    <Routes>
+      <Route path="/" element={<Todolists />} />
+      <Route path="login" element={<Login />} />
+    </Routes>
+    <ErrorBar />
+  </div>
+);
 
 export default App;

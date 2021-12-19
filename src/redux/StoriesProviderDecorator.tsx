@@ -13,10 +13,25 @@ const initialState: RootStateType = {
   app: {
     error: null,
     status: 'idle',
+    isInitialized: false,
   },
   todolist: [
-    { id: '1', title: 'What to bu', addedDate: '', order: 0, filter: 'all' },
-    { id: '2', title: 'What to buy', addedDate: '', order: 0, filter: 'all' },
+    {
+      id: '1',
+      title: 'What to bu',
+      addedDate: '',
+      order: 0,
+      filter: 'all',
+      status: 'idle',
+    },
+    {
+      id: '2',
+      title: 'What to buy',
+      addedDate: '',
+      order: 0,
+      filter: 'all',
+      status: 'idle',
+    },
   ],
   tasks: {
     '1': [

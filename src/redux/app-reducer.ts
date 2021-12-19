@@ -1,9 +1,15 @@
+import { Dispatch } from 'redux';
+
+import { authAPI } from '../dal/api';
+
 const APP_SET_ERROR = 'App/SET_ERROR';
 const APP_SET_STATUS = 'App/SET_STATUS';
+const INITIALIZE_THE_APP = 'App/INITIALIZE_THE_APP';
 
 const initStateApp: InitStateAppType = {
   status: 'idle',
   error: null,
+  isInitialized: false,
 };
 
 export const appReducer = (
@@ -15,6 +21,8 @@ export const appReducer = (
       return { ...state, ...action.payload };
     case APP_SET_STATUS:
       return { ...state, ...action.payload };
+    case INITIALIZE_THE_APP:
+      return { ...state, ...action.payload };
     default:
       return state;
   }
@@ -25,14 +33,29 @@ export const setError = (error: null | string) =>
   ({ type: APP_SET_ERROR, payload: { error } } as const);
 export const setStatusApp = (status: AppStatusType) =>
   ({ type: APP_SET_STATUS, payload: { status } } as const);
+export const initializeTheApp = (isInitialized: boolean) =>
+  ({ type: INITIALIZE_THE_APP, payload: { isInitialized } } as const);
 
 // types
 export type InitStateAppType = {
   status: AppStatusType;
   error: string | null;
+  isInitialized: boolean;
 };
 type SetErrorType = ReturnType<typeof setError>;
 type SetStatusAppType = ReturnType<typeof setStatusApp>;
-type ActionType = SetErrorType | SetStatusAppType;
+type InitializeTheAppType = ReturnType<typeof initializeTheApp>;
+type ActionType = SetErrorType | SetStatusAppType | InitializeTheAppType;
 
 export type AppStatusType = 'idle' | 'loading' | 'succeeded' | 'failed';
+
+export const setInitialization = () => (dispatch: Dispatch) => {
+  authAPI
+    .getAuthMe()
+    .then(res => {
+      if (res.data.resultCode === 0) {
+        dispatch(initializeTheApp(true));
+      }
+    })
+    .catch(err => dispatch(setError(err.message)));
+};
