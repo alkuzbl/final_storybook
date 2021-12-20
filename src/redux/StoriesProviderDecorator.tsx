@@ -10,6 +10,7 @@ import { tasksReducer } from './tasks-reducer';
 import { todolistReducer } from './todolist-reducer';
 
 const initialState: RootStateType = {
+  auth: { isLoggedIn: false },
   app: {
     error: null,
     status: 'idle',

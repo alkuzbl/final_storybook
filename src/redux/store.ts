@@ -1,6 +1,8 @@
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 
+import { authReducer } from '../features/Login/auth-reducer';
+
 import { appReducer } from './app-reducer';
 import { tasksReducer } from './tasks-reducer';
 import { todolistReducer } from './todolist-reducer';
@@ -10,9 +12,9 @@ const rootReducer = combineReducers({
   tasks: tasksReducer,
   todolist: todolistReducer,
   app: appReducer,
+  auth: authReducer,
 });
 
-export type RootStoreType = typeof store;
 export const store = createStore(rootReducer, applyMiddleware(thunk));
 
 // @ts-ignore

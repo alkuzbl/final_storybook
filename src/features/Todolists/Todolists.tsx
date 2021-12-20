@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 
 import { Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
 import { FieldAddingNewElement } from '../../components/FieldAddingNewElement/FieldAddingNewElement';
-import { setInitialization } from '../../redux/app-reducer';
 import { RootStateType } from '../../redux/store';
 import {
   createTodolistTC,
@@ -17,23 +17,23 @@ export const Todolists = () => {
   const todolist = useSelector<RootStateType, InitialStateTodolistType>(
     state => state.todolist,
   );
-  const initialized = useSelector<RootStateType, boolean>(
-    state => state.app.isInitialized,
-  );
+  const isLoggedIn = useSelector<RootStateType, boolean>(state => state.auth.isLoggedIn);
   const dispatch = useDispatch();
-  // не работает
+  console.log(isLoggedIn);
   useEffect(() => {
-    console.log('init');
-    dispatch(setInitialization());
-  }, [initialized]);
-
-  useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
     dispatch(setTodolistsTC());
   }, []);
 
   const addNewTodolist = (title: string) => {
     dispatch(createTodolistTC(title));
   };
+
+  if (!isLoggedIn) {
+    return <Navigate to="login" />;
+  }
 
   return (
     <>

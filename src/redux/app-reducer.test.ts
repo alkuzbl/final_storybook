@@ -1,6 +1,6 @@
 import {
   appReducer,
-  initializeTheApp,
+  setAppInitialized,
   InitStateAppType,
   setError,
   setStatusApp,
@@ -33,7 +33,7 @@ test('The status "loading" should be added', () => {
 });
 
 test('The isInitialized "false" should be "true"', () => {
-  const testTasksState = appReducer(state, initializeTheApp(true));
+  const testTasksState = appReducer(state, setAppInitialized(true));
 
   expect(testTasksState.isInitialized).toBe(true);
   expect(testTasksState.error).toBe(null);

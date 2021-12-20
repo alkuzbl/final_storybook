@@ -7,16 +7,23 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { InitStateAppType } from '../../redux/app-reducer';
 import { RootStateType } from '../../redux/store';
+import { setLogOut } from '../Login/auth-reducer';
 
 const styleForHeaderMargin = { marginBottom: '20px' };
 
 const ButtonAppBar = () => {
   const appData = useSelector<RootStateType, InitStateAppType>(state => state.app);
-  const { status, isInitialized } = appData;
+  const isLoggedIn = useSelector<RootStateType, boolean>(state => state.auth.isLoggedIn);
+  const { status } = appData;
+  const dispatch = useDispatch();
+
+  const onClicklogOutHandler = () => {
+    dispatch(setLogOut());
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }} style={styleForHeaderMargin}>
@@ -31,7 +38,11 @@ const ButtonAppBar = () => {
           >
             <MenuIcon />
           </IconButton>
-          {isInitialized && <Button color="inherit">Log out</Button>}
+          {isLoggedIn && (
+            <Button color="inherit" onClick={onClicklogOutHandler}>
+              Log out
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
       <div style={{ height: '4px', backgroundColor: '#1976d2' }}>

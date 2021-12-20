@@ -8,9 +8,13 @@ const instance = axios.create({
 
 // api
 export const authAPI = {
-  setLogin: (data: { email: string; password: string; rememberMe: string }) =>
-    instance.post<{ resultCode: number; data: { userId: number } }>('auth/login', data),
+  setLogin: (data: { email: string; password: string; rememberMe: boolean }) =>
+    instance.post<{ resultCode: number; data: { userId: number }; messages: string[] }>(
+      'auth/login',
+      data,
+    ),
   getAuthMe: () => instance.get<{ resultCode: number }>('auth/me'),
+  logOut: () => instance.delete<ResponseAPIType<{}>>('auth/login'),
 };
 
 export const todolistAPI = {
