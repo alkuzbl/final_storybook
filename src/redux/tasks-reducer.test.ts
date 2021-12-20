@@ -1,5 +1,6 @@
 import { TaskStatuses, TodolistType } from '../dal/api';
 
+import { AppStatusType } from './app-reducer';
 import {
   addTask,
   removeTask,
@@ -110,12 +111,13 @@ test('In a task with id 2, the status should be "TaskStatuses.New"', () => {
 });
 
 test('A second task list with id 2 should be added', () => {
-  const newTodolist: TodolistType & { filter: FilterType } = {
+  const newTodolist: TodolistType & { filter: FilterType; status: AppStatusType } = {
     id: '2',
     title: 'Test todolist title',
     filter: 'all',
     order: 0,
     addedDate: '',
+    status: 'idle',
   };
 
   const testTasksState = tasksReducer(state, addTodolist(newTodolist));

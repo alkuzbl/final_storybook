@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 
 import { Grid } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
 
 import { FieldAddingNewElement } from '../../components/FieldAddingNewElement/FieldAddingNewElement';
 import { setInitialization } from '../../redux/app-reducer';
