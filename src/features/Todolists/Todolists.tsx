@@ -14,12 +14,12 @@ import {
 import { TodoList } from '../TodoList/TodoList';
 
 export const Todolists = () => {
-  const todolist = useSelector<RootStateType, InitialStateTodolistType>(
+  const todolists = useSelector<RootStateType, InitialStateTodolistType>(
     state => state.todolist,
   );
   const isLoggedIn = useSelector<RootStateType, boolean>(state => state.auth.isLoggedIn);
   const dispatch = useDispatch();
-  console.log(isLoggedIn);
+
   useEffect(() => {
     if (!isLoggedIn) {
       return;
@@ -42,7 +42,7 @@ export const Todolists = () => {
         label="Title for to-do list"
       />
       <Grid justifyContent="center" container spacing={1}>
-        {todolist.map(t => (
+        {todolists.map(t => (
           <TodoList
             key={t.id}
             title={t.title}

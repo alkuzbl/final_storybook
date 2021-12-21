@@ -37,28 +37,27 @@ export const setStatusApp = (status: AppStatusType) =>
 export const setAppInitialized = (isInitialized: boolean) =>
   ({ type: SET_APP_INITIALIZED, payload: { isInitialized } } as const);
 
-// types
-export type InitStateAppType = {
-  status: AppStatusType;
-  error: string | null;
-  isInitialized: boolean;
+// thanks
+export const initializeApp = () => async (dispatch: Dispatch) => {
+  try {
+    const res = await authAPI.getAuthMe();
+    if (res.data.resultCode === 0) {
+      dispatch(setIsLoggedIn(true));
+    }
+    dispatch(setAppInitialized(true));
+  } catch (err: any) {
+    dispatch(setError(err.message));
+  }
 };
+
+// types
+export type AppStatusType = 'idle' | 'loading' | 'succeeded' | 'failed';
 type SetErrorType = ReturnType<typeof setError>;
 type SetStatusAppType = ReturnType<typeof setStatusApp>;
 type setAppInitializedType = ReturnType<typeof setAppInitialized>;
 type ActionType = SetErrorType | SetStatusAppType | setAppInitializedType;
-
-export type AppStatusType = 'idle' | 'loading' | 'succeeded' | 'failed';
-
-export const initializeApp = () => (dispatch: Dispatch) => {
-  authAPI
-    .getAuthMe()
-    .then(res => {
-      if (res.data.resultCode === 0) {
-        dispatch(setIsLoggedIn(true));
-      }
-      // разобраться - не понимаю
-      dispatch(setAppInitialized(true));
-    })
-    .catch(err => dispatch(setError(err.message)));
+export type InitStateAppType = {
+  status: AppStatusType;
+  error: string | null;
+  isInitialized: boolean;
 };

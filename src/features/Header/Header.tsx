@@ -21,7 +21,7 @@ const ButtonAppBar = () => {
   const { status } = appData;
   const dispatch = useDispatch();
 
-  const onClicklogOutHandler = () => {
+  const onClickLogoutHandler = () => {
     dispatch(setLogOut());
   };
 
@@ -39,7 +39,7 @@ const ButtonAppBar = () => {
             <MenuIcon />
           </IconButton>
           {isLoggedIn && (
-            <Button color="inherit" onClick={onClicklogOutHandler}>
+            <Button color="inherit" onClick={onClickLogoutHandler}>
               Log out
             </Button>
           )}

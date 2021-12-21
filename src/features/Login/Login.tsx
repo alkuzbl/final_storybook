@@ -23,12 +23,12 @@ export const Login = () => {
   const isLoggedIn = useSelector<RootStateType, boolean>(state => state.auth.isLoggedIn);
 
   const formik = useFormik({
-    validate: value => loginValidationCheck(value),
     initialValues: {
       email: '',
       password: '',
       rememberMe: false,
     },
+    validate: value => loginValidationCheck(value),
     onSubmit: values => {
       dispatch(setLogin(values));
     },

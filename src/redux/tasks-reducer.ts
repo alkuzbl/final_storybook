@@ -9,6 +9,8 @@ import { RootStateType } from './store';
 import {
   ADD_TODOLIST,
   AddTodolistType,
+  CLEAR_STATE,
+  ClearStateType,
   REMOVE_TODOLIST,
   RemoveTodolistType,
 } from './todolist-reducer';
@@ -55,6 +57,8 @@ export const tasksReducer = (
         ...state,
         ...action.payload,
       };
+    case CLEAR_STATE:
+      return {};
     default:
       return state;
   }
@@ -74,81 +78,81 @@ export const updateTask = (tasksID: string, id: string, payload: TaskType) =>
 export const getTasks = (payload: TasksType) => ({ type: GET_TASKS, payload } as const);
 
 // thanks
-export const getTasksTC = (todolistID: string) => (dispatch: Dispatch) => {
-  dispatch(setStatusApp('loading'));
-  tasksAPI
-    .getTasks(todolistID, 10, 1)
-    .then(res => {
-      if (res.data.error === null) {
-        dispatch(getTasks({ [todolistID]: res.data.items }));
-      } else {
-        dispatch(setError(res.data.error));
-      }
-      dispatch(setStatusApp('idle'));
-    })
-    .catch(err => errorsAppHandler(err, dispatch, 'idle'));
+export const getTasksTC = (todolistID: string) => async (dispatch: Dispatch) => {
+  try {
+    dispatch(setStatusApp('loading'));
+    const res = await tasksAPI.getTasks(todolistID, 10, 1);
+    if (res.data.error === null) {
+      dispatch(getTasks({ [todolistID]: res.data.items }));
+    } else {
+      dispatch(setError(res.data.error));
+    }
+    dispatch(setStatusApp('idle'));
+  } catch (err: any) {
+    errorsAppHandler(err, dispatch, 'idle');
+  }
 };
-
 export const createTaskTC =
-  (todolistID: string, title: string) => (dispatch: Dispatch) => {
-    setWithTheStatus(todolistID, 'loading', dispatch);
-    tasksAPI
-      .createTask(todolistID, title)
-      .then(res => {
-        if (res.data.resultCode === 0) {
-          const task: TaskType = res.data.data.item;
-          dispatch(addTask(todolistID, task));
-        } else {
-          dispatch(setError(res.data.messages[0]));
-        }
-        setWithTheStatus(todolistID, 'idle', dispatch);
-      })
-      .catch(err => errorsTodolistHandler(err, dispatch, todolistID, 'idle'));
+  (todolistID: string, title: string) => async (dispatch: Dispatch) => {
+    try {
+      setWithTheStatus(todolistID, 'loading', dispatch);
+      const res = await tasksAPI.createTask(todolistID, title);
+      if (res.data.resultCode === 0) {
+        const task: TaskType = res.data.data.item;
+        dispatch(addTask(todolistID, task));
+      } else {
+        dispatch(setError(res.data.messages[0]));
+      }
+      setWithTheStatus(todolistID, 'idle', dispatch);
+    } catch (err: any) {
+      errorsTodolistHandler(err, dispatch, todolistID, 'idle');
+    }
   };
-
 export const removeTaskTC =
-  (todolistID: string, taskID: string) => (dispatch: Dispatch) => {
-    setWithTheStatus(todolistID, 'loading', dispatch);
-    tasksAPI
-      .removeTask(todolistID, taskID)
-      .then(res => {
-        if (res.data.resultCode === 0) {
-          dispatch(removeTask(todolistID, taskID));
-        } else {
-          dispatch(setError(res.data.messages[0]));
-        }
-        setWithTheStatus(todolistID, 'idle', dispatch);
-      })
-      .catch(err => errorsTodolistHandler(err, dispatch, todolistID, 'idle'));
+  (todolistID: string, taskID: string) => async (dispatch: Dispatch) => {
+    try {
+      setWithTheStatus(todolistID, 'loading', dispatch);
+      const res = await tasksAPI.removeTask(todolistID, taskID);
+      if (res.data.resultCode === 0) {
+        dispatch(removeTask(todolistID, taskID));
+      } else {
+        dispatch(setError(res.data.messages[0]));
+      }
+      setWithTheStatus(todolistID, 'idle', dispatch);
+    } catch (err: any) {
+      errorsTodolistHandler(err, dispatch, todolistID, 'idle');
+    }
   };
-
 export const updateTaskTC =
   (todolistID: string, taskID: string, updatedModel: UpdatedModelType) =>
-  (dispatch: Dispatch, getState: () => RootStateType) => {
-    const state = getState();
-    const task = state.tasks[todolistID].find(t => t.id === taskID);
-    if (task) {
-      setWithTheStatus(todolistID, 'loading', dispatch);
-      const taskModelApi: ModelTaskType = {
-        title: task.title,
-        description: task.description,
-        status: task.status,
-        priority: task.priority,
-        startDate: task.startDate,
-        deadline: task.deadline,
-      };
-      tasksAPI
-        .updateTask(todolistID, taskID, { ...taskModelApi, ...updatedModel })
-        .then(res => {
-          if (res.data.resultCode === 0) {
-            const updatedTask = res.data.data.item;
-            dispatch(updateTask(todolistID, taskID, updatedTask));
-          } else {
-            dispatch(setError(res.data.messages[0]));
-          }
-          setWithTheStatus(todolistID, 'idle', dispatch);
-        })
-        .catch(err => errorsTodolistHandler(err, dispatch, todolistID, 'idle'));
+  async (dispatch: Dispatch, getState: () => RootStateType) => {
+    try {
+      const state = getState();
+      const task = state.tasks[todolistID].find(t => t.id === taskID);
+      if (task) {
+        setWithTheStatus(todolistID, 'loading', dispatch);
+        const taskModelApi: ModelTaskType = {
+          title: task.title,
+          description: task.description,
+          status: task.status,
+          priority: task.priority,
+          startDate: task.startDate,
+          deadline: task.deadline,
+        };
+        const res = await tasksAPI.updateTask(todolistID, taskID, {
+          ...taskModelApi,
+          ...updatedModel,
+        });
+        if (res.data.resultCode === 0) {
+          const updatedTask = res.data.data.item;
+          dispatch(updateTask(todolistID, taskID, updatedTask));
+        } else {
+          dispatch(setError(res.data.messages[0]));
+        }
+        setWithTheStatus(todolistID, 'idle', dispatch);
+      }
+    } catch (err: any) {
+      errorsTodolistHandler(err, dispatch, todolistID, 'idle');
     }
   };
 
@@ -163,6 +167,7 @@ type ActionType =
   | ReturnType<typeof updateTask>
   | AddTodolistType
   | RemoveTodolistType
-  | ReturnType<typeof getTasks>;
+  | ReturnType<typeof getTasks>
+  | ClearStateType;
 
 type UpdatedModelType = { title: string } | { status: TaskStatuses };

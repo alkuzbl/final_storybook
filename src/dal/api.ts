@@ -8,7 +8,7 @@ const instance = axios.create({
 
 // api
 export const authAPI = {
-  setLogin: (data: { email: string; password: string; rememberMe: boolean }) =>
+  setLogin: (data: AuthDataType) =>
     instance.post<{ resultCode: number; data: { userId: number }; messages: string[] }>(
       'auth/login',
       data,
@@ -59,17 +59,14 @@ export type TodolistType = {
   order: number;
   title: string;
 };
-
 type DataAPIType = {
   item: TodolistType;
 };
-
 type ResponseAPIType<D> = {
   resultCode: number;
   messages: string[];
   data: D;
 };
-
 export enum TaskStatuses {
   New,
   InProgress,
@@ -83,7 +80,6 @@ export enum TaskPriorities {
   Urgently,
   Later,
 }
-
 export type TaskType = {
   description: string;
   title: string;
@@ -96,7 +92,6 @@ export type TaskType = {
   order: number;
   addedDate: string;
 };
-
 export type ModelTaskType = {
   title: string;
   description: string;
@@ -106,15 +101,18 @@ export type ModelTaskType = {
   startDate: string;
   deadline: string;
 };
-
 type ResponseTaskAPIType<D> = {
   resultCode: number;
   messages: string[];
   data: D;
 };
-
 type ResponseTasksAPIType = {
   items: TaskType[];
   totalCount: number;
   error: string | null;
+};
+export type AuthDataType = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
 };
